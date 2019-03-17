@@ -1,15 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
-#123
 # In[ ]:
 
 import command_dictionary
 
 
 def package_text(unpackage_text):
-    for sub_array_index in range(len(unpackage_text)):
-        print("處理字串"+unpackage_text[sub_array_index])
-        unpackage_text[sub_array_index] = 'text;'+unpackage_text[sub_array_index]
+    unpackage_text = 'text;'+unpackage_text
     return str(unpackage_text)
 
 
@@ -29,9 +26,7 @@ def normal_talk(user_message):
 
 
 def calculator_dogfood():
-    reply = []
-    reply.append('狗糧萬歲')
-    reply.append('1234455')
+    reply = '狗糧萬歲'
     reply = package_text(unpackage_text=reply)
     print("處理結果"+reply)
     return reply

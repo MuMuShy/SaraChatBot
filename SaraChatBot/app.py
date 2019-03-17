@@ -37,19 +37,15 @@ def callback():
 def handle_message(event):
     user_message = str(event.message.text)
     sara_reply = Sara.get_reply(user_message)
-    print("訊息長度" + str(len(sara_reply)))
-    for sara_reply_index in range(len(sara_reply)):
-        print("索引"+str(sara_reply_index))
-        print('Sara回覆:未處理:'+sara_reply[sara_reply_index])
-        reply_type = str(sara_reply[sara_reply_index].split(';')[0])
-        reply_message=str(sara_reply[sara_reply_index].split(';')[1])
-        print('sara回覆:處理結果'+reply_message)
-        if reply_type == 'text':
-            print('文字回覆格式 開始回覆')
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply_message))
-        else:
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text="其他格式回覆"))
-        #回傳字串
+    #print("訊息長度" + str(len(sara_reply)))
+    reply_type = sara_reply.split(';')[0]
+    reply_message = sara_reply.split(';')[1]
+    if reply_type == 'text':
+        print('文字回覆格式 開始回覆')
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply_message))
+    else:
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text="其他格式回覆"))
+    #回傳字串
 
 
 import os
