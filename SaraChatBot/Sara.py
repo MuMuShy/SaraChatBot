@@ -28,8 +28,14 @@ def get_reply(user_message):
 
 
 def talk_normal(user_message):
-    reply = "https://mumu.tw/mumu/image/sara.jpg 標題123 內文 我是按鈕"
-    reply = package_button_template(reply)
+    from chatterbot import ChatBot
+    chatbot = ChatBot('Sara', trainer='chatterbot.trainers.ChatterBotCorpusTrainer')
+    # 載入(簡體)中文的問候語言庫
+    chatbot.train("chatterbot.corpus.chinese.greetings")
+    # 載入(簡體)中文的對話語言庫
+    chatbot.train("chatterbot.corpus.chinese.conversations")
+    reply = chatbot.get_response(user_message)
+    reply = package_text(reply)
     print('reply 包裝後:'+reply)
     return reply
 
@@ -87,13 +93,14 @@ def calculate_dogfood(user_message):
 def search_roiyarusupiritto(user_message):
     from bs4 import BeautifulSoup
     import requests
+    import re
     from googletrans import Translator
     import re
     res = requests.get('http://news.4399.com/yyssy/shishenlu/')
     soup = BeautifulSoup(res.content, 'lxml')
     ShiKiGaMi = {}
     for li in soup.find_all('a', href=re.compile('http://news.4399.com/yyssy/shishenlu/\w')):
-        ShiKiGaMi[li.text] = [li['href'], 'http://mumu.tw/mumu/image/onmyoji/' + li.text + '.jpg']
+        ShiKiGaMi[li.text] = [li['href'], 'https://mumu.tw/mumu/image/onmyoji/' + li.text + '.jpg']
     shikigami_name_TW = user_message.split(' ')[-1]
     translator = Translator()
     shikigami_name = translator.translate(shikigami_name_TW,dest='zh-CN').text
@@ -101,23 +108,22 @@ def search_roiyarusupiritto(user_message):
     soup2 = BeautifulSoup(res2.content,'lxml')
     roiyarusupiritto_name=[]
     roiyarusupiritto_place=[]
-    roiyarusupiritto_description=[]
     for con_hd in soup2.select('div .con .hd'):
         roiyarusupiritto_name.append(con_hd.text)
     for con_bd in soup2.select('div .con .bd'):
         roiyarusupiritto_place.append(con_bd.text)
-    for info_bd in soup.select('div .info .bd'):
-        roiyarusupiritto_description.append(info_bd.text)
     imageurl = ShiKiGaMi[shikigami_name][1]
     title = shikigami_name
     text = ''
     for i in range(0,len(roiyarusupiritto_name)):
-        text = text + roiyarusupiritto_name[i] + ':\n' + roiyarusupiritto_place + '\n' + roiyarusupiritto_description
+        text = text + roiyarusupiritto_name[i] + ':\n' + roiyarusupiritto_place[i]
         if i != len(roiyarusupiritto_name)-1:
             text+='\n'
     label = '查看'
+    print("text"+text)
     actionurl = ShiKiGaMi[shikigami_name][0]
     reply = imageurl + ' ' + title + ' ' + text + ' ' + label + ' ' + actionurl
+    print("reply"+reply)
     reply = package_button_template(unpackage_text=reply)
     return reply
 
