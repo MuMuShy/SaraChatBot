@@ -89,3 +89,50 @@ def calculate_dogfood(user_message):
     content = content + '\n(月卡,50%,100%,陰陽寮,好友組隊):' + str(math.ceil(still_need_exp/1.15/1.5/2/1.1/1.3))
     reply = package_text(unpackage_text=content)
     return reply
+
+def search_roiyarusupiritto(user_message):
+    from bs4 import BeautifulSoup
+    import requests
+    from googletrans import Translator
+    res = requests.get('http://news.4399.com/yyssy/shishenlu/')
+    soup = BeautifulSoup(res.content, 'lxml')
+    ShiKiGaMi = {}
+    for li in soup.find_all('a', href=re.compile('http://news.4399.com/yyssy/shishenlu/\w')):
+        ShiKiGaMi[li.text] = [li['href'], 'http://mumu.tw/mumu/image/onmyoji/' + li.text + '.jpg']
+    shikigami_name_TW = user_message.split(' ')[-1]
+    translator = Translator()
+    shikigami_name = translator.translate(shikigami_name_TW,dest='zh-CN').text
+    res2 = requests.get(ShiKiGaMi[shikigami_name][0])
+    soup2 = BeautifulSoup(res2.content,'lxml')
+    roiyarusupiritto_name=[]
+    roiyarusupiritto_place=[]
+    roiyarusupiritto_description=[]
+    for con_hd in soup2.select('div .con .hd'):
+        roiyarusupiritto_name.append(con_hd.text)
+    for con_bd in soup2.select('div .con .bd'):
+        roiyarusupiritto_place.append(con_bd.text)
+    for info_bd in soup.select('div .info .bd'):
+        roiyarusupiritto_description.append(info_bd.text)
+    imageurl = ShiKiGaMi[shikigami_name][1]
+    title = shikigami_name
+    text = ''
+    for i in range(0,len(roiyarusupiritto_name)):
+        text = text + roiyarusupiritto_name[i] + ':\n' + roiyarusupiritto_place + '\n' + roiyarusupiritto_description
+        if i != len(roiyarusupiritto_name)-1:
+            text+='\n'
+    label = '查看'
+    actionurl = ShiKiGaMi[shikigami_name][0]
+    reply = imageurl + ' ' + title + ' ' + text + ' ' + label + ' ' + actionurl
+    reply = package_button_template(unpackage_text=reply)
+    return reply
+
+
+
+
+
+
+
+
+
+
+

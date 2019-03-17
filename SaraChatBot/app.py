@@ -81,7 +81,7 @@ def handle_message(event):
             _actionurl=messageobject[4]
         else:
             _actionurl=' '
-        # 圖片文字回覆格式:圖片網址 標題 內文 按鈕
+        # 圖片文字回覆格式:圖片網址 標題 內文 按鈕 [目標網站(選填)]
         buttons_template = TemplateSendMessage(
             alt_text='Buttons Template',
             template=ButtonsTemplate(
