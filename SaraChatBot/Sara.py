@@ -2,7 +2,7 @@
 # coding: utf-8
 #123
 # In[ ]:
-
+#主線
 import command_dictionary
 
 
