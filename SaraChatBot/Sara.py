@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 #123
+#陰陽師開發環境
 # In[ ]:
 
 import command_dictionary
