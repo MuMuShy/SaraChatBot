@@ -9,40 +9,63 @@ def package_text(unpackage_text):
     return str(unpackage_text)
 
 
+def package_img(unpackage_text):
+    unpackage_text='img;'+unpackage_text
+    return str(unpackage_text)
+
+
+def package_button_template(unpackage_text):
+    unpackage_text='buttontemplate;'+unpackage_text
+    return str(unpackage_text)
+
 def get_reply(user_message):
     user_message = str(user_message)
     for command in command_dictionary.word.keys():
         if user_message.startswith(command):
             action_command = command_dictionary.word[command]
             return eval(action_command)
-    return talk_normal()
+    return talk_normal(user_message)
 
 
+def talk_normal(user_message):
+    reply = "https://mumu.tw/mumu/image/sara.jpg 標題123 內文 我是按鈕"
+    reply = package_button_template(reply)
+    print('reply 包裝後:'+reply)
+    return reply
 
 
 def get_Iecs_oldtest(user_message):
     from bs4 import BeautifulSoup
     import requests
-    target_subject = '線性代數'
+    subject = user_message.split(" ")
+    if len(subject) < 2:
+        reply = 'https://mumu.tw/mumu/image/sara.jpg 考古題 你要的都在這 謝謝 https://drive.google.com/open?id=1F8n4jokD55fwix5zeNRy_Cw4REJUH_RN'
+        reply = package_button_template(unpackage_text=reply)
+        return reply
+    target_subject = subject[1]
+    print(target_subject)
     r = requests.get('http://mumu.tw/mumu/Iecstest/1/grade1.html')
     soup = BeautifulSoup(r.content, 'html.parser')
     print(soup)
-    url = soup.select("a")['href']
+    if soup.find('a', id=target_subject) == None:
+        reply = '找不到此科目 可能資料庫沒有或是輸入錯誤\n如想提供考古題 可聯絡開發者～\nhttps://line.me/ti/p/SoDXl-PPop'
+        reply = package_text(unpackage_text=reply)
+        return reply
+    url = soup.find('a', id=target_subject)['href']
     print(url)
-    reply = package_text(unpackage_text=url)
+    reply='找到關於:'+target_subject+'的考古題: '+url
+    reply = package_text(unpackage_text=reply)
     return reply
 
 
-def talk_normal(user_message):
-    reply = str("hello~"+user_message)
-    print('Sara 回覆:'+reply)
-    return reply
+
 
 
 def calculate_dogfood(user_message):
     import re
     import math
-    if user_message == '狗糧 ?':
+    print(user_message)
+    if user_message == '狗糧 ?' or user_message == '狗糧 ？':
         reply = package_text(unpackage_text='請依照：\n「狗糧 二星滿等白蛋(包含三星20等白蛋),二星滿等(包含三星1|20等),三星滿等(包含四星1|25等),四星滿等(包含五星)」\n 方式輸入')
         return reply
     kind_of_dog_food = []

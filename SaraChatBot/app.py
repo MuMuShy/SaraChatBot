@@ -42,8 +42,60 @@ def handle_message(event):
     if reply_type == 'text':
         print('文字回覆格式 開始回覆')
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply_message))
-    else:
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text="其他格式回覆"))
+    elif reply_type == 'img':
+        sara_reply=sara_reply.split(';')[1]
+        original_img_url=sara_reply.split(' ')[0]
+        print('大圖: '+original_img_url)
+        preview_img_url=sara_reply.split(' ')[1]
+        print('小圖: '+preview_img_url)
+        message = ImageSendMessage(
+            original_content_url=original_img_url,
+            preview_image_url=preview_img_url
+        )
+        line_bot_api.reply_message(event.reply_token, message)
+    elif reply_type == 'greeting':
+        print('greeting!~')
+        buttons_template = TemplateSendMessage(
+            alt_text='Buttons Template',
+            template=ButtonsTemplate(
+                title='Sara',
+                text='妳好～ 我是萬用的小助理 Sara',
+                thumbnail_image_url='https://mumu.tw/mumu/image/sara.jpg',
+                actions=[
+                    MessageTemplateAction(
+                        label='我愛你',
+                        text='我愛Sara'
+                    )
+                ]
+            )
+        )
+        line_bot_api.reply_message(event.reply_token, buttons_template)
+    elif reply_type == 'buttontemplate':
+        sara_reply = sara_reply.split(';')[1]
+        messageobject = sara_reply.split(' ')
+        _imageurl = messageobject[0]
+        _title = messageobject[1]
+        _text = messageobject[2]
+        _label = messageobject[3]
+        if len(messageobject)==5:
+            _actionurl=messageobject[4]
+        # 圖片文字回覆格式:圖片網址 標題 內文 按鈕
+        buttons_template = TemplateSendMessage(
+            alt_text='Buttons Template',
+            template=ButtonsTemplate(
+                title=_title,
+                text=_text,
+                thumbnail_image_url=_imageurl,
+                actions=[
+                    MessageTemplateAction(
+                        label=_label,
+                        text=_actionurl
+                    )
+                ]
+            )
+        )
+        line_bot_api.reply_message(event.reply_token, buttons_template)
+
 
 
 
