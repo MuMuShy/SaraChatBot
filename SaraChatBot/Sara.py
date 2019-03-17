@@ -88,6 +88,7 @@ def search_roiyarusupiritto(user_message):
     from bs4 import BeautifulSoup
     import requests
     from googletrans import Translator
+    import re
     res = requests.get('http://news.4399.com/yyssy/shishenlu/')
     soup = BeautifulSoup(res.content, 'lxml')
     ShiKiGaMi = {}
