@@ -120,10 +120,8 @@ def search_roiyarusupiritto(user_message):
         if i != len(roiyarusupiritto_name)-1:
             text+='\n'
     label = '查看'
-    print("text"+text)
     actionurl = ShiKiGaMi[shikigami_name][0]
     reply = imageurl + ' ' + title + ' ' + text + ' ' + label + ' ' + actionurl
-    print("reply"+reply)
     reply = package_button_template(unpackage_text=reply)
     return reply
 
