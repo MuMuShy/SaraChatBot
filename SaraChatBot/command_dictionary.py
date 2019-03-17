@@ -1,0 +1,1 @@
+word = {'狗糧': 'calculator_dogfood()'}
