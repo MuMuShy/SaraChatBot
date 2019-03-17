@@ -77,8 +77,13 @@ def handle_message(event):
         _title = messageobject[1]
         _text = messageobject[2]
         _label = messageobject[3]
+        print('imageurl:'+_imageurl)
+        print('title: '+_title)
+        print('text: '+_text)
+        print('label: '+_label)
         if len(messageobject)==5:
             _actionurl=messageobject[4]
+            print('acitonurl: '+_actionurl)
         else:
             _actionurl=' '
         # 圖片文字回覆格式:圖片網址 標題 內文 按鈕 [目標網站(選填)]

@@ -102,3 +102,25 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+SaraChatBot/beautifulsoup4-4.6.3.dist-info/INSTALLER
+SaraChatBot/beautifulsoup4-4.6.3.dist-info/METADATA
+SaraChatBot/beautifulsoup4-4.6.3.dist-info/RECORD
+SaraChatBot/beautifulsoup4-4.6.3.dist-info/top_level.txt
+SaraChatBot/beautifulsoup4-4.6.3.dist-info/WHEEL
+SaraChatBot/bs4/__init__.py
+SaraChatBot/bs4/dammit.py
+SaraChatBot/bs4/diagnose.py
+SaraChatBot/bs4/element.py
+SaraChatBot/bs4/testing.py
+SaraChatBot/bs4/builder/__init__.py
+SaraChatBot/bs4/builder/_html5lib.py
+SaraChatBot/bs4/builder/_htmlparser.py
+SaraChatBot/bs4/builder/_lxml.py
+SaraChatBot/bs4/tests/__init__.py
+SaraChatBot/bs4/tests/test_builder_registry.py
+SaraChatBot/bs4/tests/test_docs.py
+SaraChatBot/bs4/tests/test_html5lib.py
+SaraChatBot/bs4/tests/test_htmlparser.py
+SaraChatBot/bs4/tests/test_lxml.py
+SaraChatBot/bs4/tests/test_soup.py
+SaraChatBot/bs4/tests/test_tree.py

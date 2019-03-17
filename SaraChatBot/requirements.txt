@@ -3,3 +3,5 @@ flask
 beautifulsoup4
 chatterbot
 pytz
+googletrans
+lxml
