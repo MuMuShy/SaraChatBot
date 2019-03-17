@@ -15,12 +15,12 @@ def get_reply(user_message):
         if user_message.startswith(command):
             action_command = command_dictionary.word[command]
             return eval(action_command)
-    return "12344"
+    return talk_normal()
 
 
-def normal_talk(user_message):
-    reply = str("hello~"+user_message)
-    print('Sara 回覆:'+reply)
+def talk_normal():
+    reply = 'hi~ i  am Sara'
+    reply = package_text(unpackage_text=reply)
     return reply
 
 

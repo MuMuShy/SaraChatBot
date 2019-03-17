@@ -37,7 +37,6 @@ def callback():
 def handle_message(event):
     user_message = str(event.message.text)
     sara_reply = Sara.get_reply(user_message)
-    #print("訊息長度" + str(len(sara_reply)))
     reply_type = sara_reply.split(';')[0]
     reply_message = sara_reply.split(';')[1]
     if reply_type == 'text':
