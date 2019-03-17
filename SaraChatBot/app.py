@@ -44,7 +44,7 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply_message))
     else:
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text="其他格式回覆"))
-    #回傳字串
+
 
 
 import os
