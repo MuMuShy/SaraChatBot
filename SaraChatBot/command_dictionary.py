@@ -1,1 +1,1 @@
-word = {'狗糧': 'calculator_dogfood()'}
+word = {'狗糧': 'calculate_dogfood(user_message)'}
