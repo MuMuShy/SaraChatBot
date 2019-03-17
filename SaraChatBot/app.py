@@ -79,6 +79,8 @@ def handle_message(event):
         _label = messageobject[3]
         if len(messageobject)==5:
             _actionurl=messageobject[4]
+        else:
+            _actionurl=' '
         # 圖片文字回覆格式:圖片網址 標題 內文 按鈕
         buttons_template = TemplateSendMessage(
             alt_text='Buttons Template',

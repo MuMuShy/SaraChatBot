@@ -28,8 +28,14 @@ def get_reply(user_message):
 
 
 def talk_normal(user_message):
-    reply = "https://mumu.tw/mumu/image/sara.jpg 標題123 內文 我是按鈕"
-    reply = package_button_template(reply)
+    from chatterbot import ChatBot
+    chatbot = ChatBot('Sara', trainer='chatterbot.trainers.ChatterBotCorpusTrainer')
+    # 載入(簡體)中文的問候語言庫
+    chatbot.train("chatterbot.corpus.chinese.greetings")
+    # 載入(簡體)中文的對話語言庫
+    chatbot.train("chatterbot.corpus.chinese.conversations")
+    reply = chatbot.get_response(user_message)
+    reply = package_text(reply)
     print('reply 包裝後:'+reply)
     return reply
 
