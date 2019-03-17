@@ -5,7 +5,12 @@
     <list default="true" id="5bce92b5-2065-4a66-87dd-06bd604680f9" name="Default Changelist" comment="" />
 =======
     <list default="true" id="5bce92b5-2065-4a66-87dd-06bd604680f9" name="Default Changelist" comment="">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/Sara.py" beforeDir="false" afterPath="$PROJECT_DIR$/Sara.py" afterDir="false" />
+=======
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/command_dictionary.py" beforeDir="false" afterPath="$PROJECT_DIR$/command_dictionary.py" afterDir="false" />
+>>>>>>> Onmyoji
     </list>
 >>>>>>> eb3641ac3fcc5f92a73407b300a57f6d97dee781
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -14,6 +19,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+<<<<<<< HEAD
 <<<<<<< HEAD
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
@@ -73,8 +79,22 @@
             <state relative-caret-position="615">
               <caret line="41" column="13" selection-start-line="41" selection-start-column="13" selection-end-line="41" selection-end-column="13" />
 >>>>>>> eb3641ac3fcc5f92a73407b300a57f6d97dee781
+=======
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Sara.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="696">
+              <caret line="48" lean-forward="true" selection-start-line="48" selection-end-line="48" />
+>>>>>>> Onmyoji
             </state>
           </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/command_dictionary.py">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -189,11 +209,16 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1552805993859</updated>
+      <workItem from="1552811205946" duration="3310000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
+<<<<<<< HEAD
     <option name="totallyTimeSpent" value="10000" />
+=======
+    <option name="totallyTimeSpent" value="3310000" />
+>>>>>>> Onmyoji
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -211,9 +236,15 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
+<<<<<<< HEAD
       <window_info anchor="bottom" id="Terminal" order="10" />
       <window_info anchor="bottom" id="Python Console" order="11" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
+=======
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Terminal" order="11" />
+      <window_info anchor="bottom" id="Python Console" order="12" />
+>>>>>>> Onmyoji
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -230,10 +261,13 @@
 <<<<<<< HEAD
         <state relative-caret-position="230">
           <caret line="23" column="43" selection-start-line="23" selection-start-column="43" selection-end-line="23" selection-end-column="43" />
+<<<<<<< HEAD
 =======
         <state relative-caret-position="525">
           <caret line="35" column="8" selection-start-line="35" selection-start-column="1" selection-end-line="35" selection-end-column="8" />
 >>>>>>> eb3641ac3fcc5f92a73407b300a57f6d97dee781
+=======
+>>>>>>> Onmyoji
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
@@ -250,14 +284,22 @@
     <entry file="file://$PROJECT_DIR$/Sara.py">
       <provider selected="true" editor-type-id="text-editor">
 <<<<<<< HEAD
+<<<<<<< HEAD
         <state relative-caret-position="495">
           <caret line="33" selection-start-line="33" selection-end-line="33" />
 =======
         <state relative-caret-position="615">
           <caret line="41" column="13" selection-start-line="41" selection-start-column="13" selection-end-line="41" selection-end-column="13" />
 >>>>>>> eb3641ac3fcc5f92a73407b300a57f6d97dee781
+=======
+        <state relative-caret-position="696">
+          <caret line="48" lean-forward="true" selection-start-line="48" selection-end-line="48" />
+>>>>>>> Onmyoji
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/command_dictionary.py">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
 </project>
