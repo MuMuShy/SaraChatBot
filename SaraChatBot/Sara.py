@@ -29,14 +29,29 @@ def get_reply(user_message):
 
 def talk_normal(user_message):
     from chatterbot import ChatBot
-    chatbot = ChatBot('Sara', trainer='chatterbot.trainers.ChatterBotCorpusTrainer')
-    # 載入(簡體)中文的問候語言庫
-    chatbot.train("chatterbot.corpus.chinese.greetings")
-    # 載入(簡體)中文的對話語言庫
-    chatbot.train("chatterbot.corpus.chinese.conversations")
-    reply = chatbot.get_response(user_message)
-    reply = package_text(reply)
-    print('reply 包裝後:'+reply)
+    from chatterbot.trainers import ChatterBotCorpusTrainer
+    from googletrans import Translator
+    class Sara:
+        # 建立一個 ChatBot
+        chatbot = ChatBot(
+            # 這個 ChatBot 的名字叫做 Sara
+            "Sara",
+            storage_adapter="chatterbot.storage.SQLStorageAdapter",
+        )
+
+        def __init__(self):
+            self.trainer = ChatterBotCorpusTrainer(self.chatbot)
+            self.trainer.train("chatterbot.corpus.chinese.greetings")
+            self.trainer.train("chatterbot.corpus.chinese.conversations")
+
+        def getResponse(self, message=""):
+            return self.chatbot.get_response(message)
+
+    bot=Sara()
+    reply = bot.getResponse(user_message)
+    translator = Translator()
+    reply = translator.translate(str(reply), dest='zh-TW').text
+    reply = package_text(str(reply))
     return reply
 
 
@@ -115,7 +130,7 @@ def search_roiyarusupiritto(user_message):
     title = shikigami_name
     text = ''
     for i in range(0,len(roiyarusupiritto_name)):
-        text = text + roiyarusupiritto_name[i] + ':\n' + roiyarusupiritto_place[i]
+        text = text + roiyarusupiritto_name[i] + '\n'
         if i != len(roiyarusupiritto_name)-1:
             text+='\n'
     label = '查看'

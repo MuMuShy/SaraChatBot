@@ -34,11 +34,27 @@ def callback():
 
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
+@handler.add(MessageEvent, message=LocationMessage)
+@handler.add(MessageEvent, message=StickerMessage)
 def handle_message(event):
-    user_message = str(event.message.text)
+    user_message_type=event.message.type
+    #使用者傳送了 地理位置類型
+    if user_message_type == 'location':
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text="我知道你在哪！"))
+        user_message=event.message
+    # 使用者傳送了一般文字訊息
+    elif user_message_type == 'text':
+        user_message = str(event.message.text)
+    # 使用者傳送了貼圖訊息
+    elif user_message_type == 'sticker':
+        print('收到貼圖訊息')
+        line_bot_api.reply_message(event.reply_token, StickerSendMessage(package_id='1',sticker_id=410))
+    print(user_message)
     sara_reply = Sara.get_reply(user_message)
     reply_type = sara_reply.split(';')[0]
     reply_message = sara_reply.split(';')[1]
+
+    #回覆給使用者的格式
     if reply_type == 'text':
         print('文字回覆格式 開始回覆')
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply_message))
