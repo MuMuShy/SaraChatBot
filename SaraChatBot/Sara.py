@@ -18,13 +18,22 @@ def package_button_template(unpackage_text):
     unpackage_text='buttontemplate;'+unpackage_text
     return str(unpackage_text)
 
-def get_reply(user_message):
+def get_reply(user_message,user_id=0):
     user_message = str(user_message)
     for command in command_dictionary.word.keys():
         if user_message.startswith(command):
             action_command = command_dictionary.word[command]
             return eval(action_command)
     return talk_normal(user_message)
+
+
+def get_MySql_command(user_MySql,user_message):
+    for x in range(len(user_MySql)):
+        if user_MySql[x] == '1':
+            command_index=str(x)
+            action_command=command_dictionary.word_MySQl[command_index]
+            return eval(action_command)
+
 
 #普通回話
 def talk_normal(user_message):
@@ -149,7 +158,7 @@ def recommend_food(user_message):
     cities = ['台北市', '新北市', '桃園市', '台中市', '台南市', '高雄市', '基隆市', '新竹市', '嘉義市', '新竹縣',
               '苗栗縣', '彰化縣', '南投縣', '雲林縣', '嘉義縣', '屏東縣', '宜蘭縣', '花蓮縣', '台東縣', '澎湖縣']
     if type(user_message) == str:
-        url = 'https://www.foodpanda.com.tw/' + 'restaurants/lat/24.179015012388728/lng/120.64990508059006/city/台中市/address/407台灣台中市西屯區逢大路127號'
+        url = 'https://www.foodpanda.com.tw/' + user_message
     else:
         lat = user_message.latitude
         lng = user_message.longitude
@@ -168,7 +177,7 @@ def recommend_food(user_message):
     pictures = []
     food_datas = {}
     for store in soup.find_all('span', 'name fn'):
-        stores.append(store.text)
+        stores.append(store.text.replace(' ',''))
     for summary in soup.find_all('li', 'vendor-characteristic'):
         summarys.append(summary.text[1:-1].replace('\n', ','))
     for cost in soup.find_all('ul', 'extra-info mov-df-extra-info'):
@@ -182,15 +191,23 @@ def recommend_food(user_message):
     title = stores[which_one]
     text = food_datas[stores[which_one]][0] + '\n' + food_datas[stores[which_one]][1]
     label = '下一個'
-    actionurl = 'restaurants/lat/24.179015012388728/lng/120.64990508059006/city/台中市/address/407台灣台中市西屯區逢大路127號'
+    actionurl = url.replace('https://www.foodpanda.com.tw/','')
     reply = imageurl + ' ' + title + ' ' + text + ' ' + label + ' ' + actionurl
     reply = package_button_template(unpackage_text=reply)
     return reply
 
 
-
-
-
+# 查詢食物 第一次執行將資料庫某指令設為true
+def set_MySqlfood(user_message,user_id):
+    print('更新使用者食物查詢狀態:'+user_id)
+    id=user_id
+    import requests
+    data={'id':id,'command':'recommend_food(user_message)'}
+    r = requests.post('http://mumu.tw/mumu/php/Sara/SetCommand.php', data=data)
+    print(r.text)
+    reply='按左下角的+ 發送位置訊息給我 我就能推薦你食物呦！'
+    reply=package_text(reply)
+    return reply
 
 
 
