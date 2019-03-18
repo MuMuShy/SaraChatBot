@@ -110,6 +110,7 @@ def search_roiyarusupiritto(user_message):
     import requests
     import re
     from googletrans import Translator
+    import re
     res = requests.get('http://news.4399.com/yyssy/shishenlu/')
     soup = BeautifulSoup(res.content, 'lxml')
     ShiKiGaMi = {}
@@ -134,10 +135,8 @@ def search_roiyarusupiritto(user_message):
         if i != len(roiyarusupiritto_name)-1:
             text+='\n'
     label = '查看'
-    print("text"+text)
     actionurl = ShiKiGaMi[shikigami_name][0]
     reply = imageurl + ' ' + title + ' ' + text + ' ' + label + ' ' + actionurl
-    print("reply"+reply)
     reply = package_button_template(unpackage_text=reply)
     return reply
 
