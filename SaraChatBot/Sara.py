@@ -26,7 +26,7 @@ def get_reply(user_message):
             return eval(action_command)
     return talk_normal(user_message)
 
-
+#普通回話
 def talk_normal(user_message):
     from chatterbot import ChatBot
     from chatterbot.trainers import ChatterBotCorpusTrainer
@@ -54,7 +54,7 @@ def talk_normal(user_message):
     reply = package_text(str(reply))
     return reply
 
-
+#查詢IECS考古題
 def get_Iecs_oldtest(user_message):
     from bs4 import BeautifulSoup
     import requests
@@ -81,7 +81,7 @@ def get_Iecs_oldtest(user_message):
 
 
 
-
+#計算狗糧剩餘場數
 def calculate_dogfood(user_message):
     import re
     import math
@@ -104,7 +104,7 @@ def calculate_dogfood(user_message):
     content = content + '\n(月卡,50%,100%,陰陽寮,好友組隊):' + str(math.ceil(still_need_exp/1.15/1.5/2/1.1/1.3))
     reply = package_text(unpackage_text=content)
     return reply
-
+#搜尋御魂配置
 def search_roiyarusupiritto(user_message):
     from bs4 import BeautifulSoup
     import requests
@@ -139,6 +139,7 @@ def search_roiyarusupiritto(user_message):
     reply = imageurl + ' ' + title + ' ' + text + ' ' + label + ' ' + actionurl
     reply = package_button_template(unpackage_text=reply)
     return reply
+
 
 
 
