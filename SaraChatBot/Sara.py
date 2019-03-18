@@ -210,7 +210,32 @@ def set_MySqlfood(user_message,user_id):
     return reply
 
 
-
+#查詢傳說對決基本資料
+def search_ArenaofValor(user_message):
+    from bs4 import BeautifulSoup
+    import requests
+    what_to_search = user_message.split(' ')[-1]
+    res = requests.get('https://pro.moba.garena.tw/heroList')
+    soup = BeautifulSoup(res.content,'lxml')
+    hero_urls=[]
+    hero_names=[]
+    hero_pictures=[]
+    hero_datas={}
+    for hero in soup.find_all('a','herolist-list__item-a'):
+        hero_names.append(hero.text.replace('\t','').replace('\n',''))
+        hero_urls.append(hero['href'])
+    for hero in soup.find_all('img'):
+        hero_pictures.append('https:'+hero['src'])
+    for index in range(0,len(hero_names)):
+        hero_datas[hero_names[index]] = [hero_urls[index],hero_pictures[index]]
+    imageurl = hero_datas[what_to_search][1]
+    title = what_to_search
+    text = what_to_search
+    label = '查看'
+    actionurl = hero_datas[what_to_search][0]
+    reply = imageurl + ' ' + title + ' ' + text + ' ' + label + ' ' + actionurl
+    reply = package_button_template(unpackage_text=reply)
+    return reply
 
 
 
