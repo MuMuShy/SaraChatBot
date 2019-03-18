@@ -5,3 +5,4 @@ chatterbot
 pytz
 googletrans
 lxml
+PyMySQL 

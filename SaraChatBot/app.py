@@ -8,7 +8,7 @@ from linebot.exceptions import (
 )
 from linebot.models import *
 import Sara
-
+import  requests
 
 app = Flask(__name__)
 
@@ -16,6 +16,24 @@ app = Flask(__name__)
 line_bot_api = LineBotApi('1OIbKHpoQ6M7tHdTgwyi3SIfHMq8aC5LPa/M+QYp/2mCOlPWxQgKX6JkBXjBuC3ZRhYKLWPN+D8uFdBN/nxTvT+exrdhpLvJPTQqPKLdzhJJa/t2cQSiF6SNgMbf1JqUEkGEmCYwhLZZha2omMuX6wdB04t89/1O/w1cDnyilFU=')
 # Channel Secret
 handler = WebhookHandler('0fa53597780a6097e5a73f0219c4925d')
+
+
+#新增使用者id 如id已存在 則不更動
+def add_userid(userid):
+    data = {'id': userid}
+    print('新增id資料', data)
+    r = requests.post('http://mumu.tw/mumu/php/Sara/AddId.php', data=data)
+    print(r.text)
+
+
+def find_coomand(userid):
+    print('開始搜尋指令')
+    data = {'id': userid}
+    r = requests.post('http://mumu.tw/mumu/php/Sara/FindCommand.php', data=data)
+    commands = r.text.split()
+    for x in range(len(commands)):
+        print('指令索引:'+str(x))
+        print(commands[x])
 
 # 監聽所有來自 /callback 的 Post Request
 @app.route("/callback", methods=['POST'])
@@ -37,9 +55,12 @@ def callback():
 @handler.add(MessageEvent, message=LocationMessage)
 @handler.add(MessageEvent, message=StickerMessage)
 def handle_message(event):
+    user_id = event.source.user_id
+    add_userid(user_id)
     user_message_type=event.message.type
     #使用者傳送了 地理位置類型
     if user_message_type == 'location':
+        find_coomand(user_id)
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text="我知道你在哪！"))
         user_message=event.message
     # 使用者傳送了一般文字訊息
