@@ -8,7 +8,7 @@ from linebot.exceptions import (
 )
 from linebot.models import *
 import Sara
-import  requests
+import requests
 
 
 app = Flask(__name__)
@@ -18,8 +18,8 @@ line_bot_api = LineBotApi('1OIbKHpoQ6M7tHdTgwyi3SIfHMq8aC5LPa/M+QYp/2mCOlPWxQgKX
 # Channel Secret
 handler = WebhookHandler('0fa53597780a6097e5a73f0219c4925d')
 
+# coding=UTF-8
 
-#新增使用者id 如id已存在 則不更動
 def add_userid(userid):
     data = {'id': userid}
     print('新增id資料', data)
