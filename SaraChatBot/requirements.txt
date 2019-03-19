@@ -5,4 +5,5 @@ chatterbot
 pytz
 googletrans
 lxml
-PyMySQL 
+PyMySQL
+selenium
