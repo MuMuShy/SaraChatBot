@@ -155,43 +155,76 @@ def recommend_food(user_message):
     from bs4 import BeautifulSoup
     import requests
     import random
+    from selenium import webdriver
     cities = ['台北市', '新北市', '桃園市', '台中市', '台南市', '高雄市', '基隆市', '新竹市', '嘉義市', '新竹縣',
               '苗栗縣', '彰化縣', '南投縣', '雲林縣', '嘉義縣', '屏東縣', '宜蘭縣', '花蓮縣', '台東縣', '澎湖縣']
-    if type(user_message) == str:
-        url = 'https://www.foodpanda.com.tw/' + user_message
-    else:
-        lat = user_message.latitude
-        lng = user_message.longitude
-        address = user_message.address
-        for c in cities:
-            if re.search(c, address) != None:
-                city = c
-        url = 'https://www.foodpanda.com.tw/restaurants/lat/' + str(lat) + '/lng/' + str(
-            lng) + '/city/' + city + '/address/' + address
-    print(url)
-    res = requests.get(url)
-    soup = BeautifulSoup(res.content, 'lxml')
-    stores = []
-    summarys = []
-    costs = []
-    pictures = []
-    food_datas = {}
-    for store in soup.find_all('span', 'name fn'):
-        stores.append(store.text.replace(' ',''))
-    for summary in soup.find_all('li', 'vendor-characteristic'):
-        summarys.append(summary.text[1:-1].replace('\n', ','))
-    for cost in soup.find_all('ul', 'extra-info mov-df-extra-info'):
-        costs.append(cost.text.replace('\n', '').replace(' ', ''))
-    for picture in soup.find_all('div', 'vendor-picture b-lazy'):
-        pictures.append(picture['data-src'].split('|')[0])
-    for index, key in enumerate(stores):
-        food_datas[key] = [summarys[index], costs[index], pictures[index]]
-    which_one = random.randint(0, len(stores))
-    imageurl = food_datas[stores[which_one]][2]
-    title = stores[which_one]
-    text = food_datas[stores[which_one]][0] + '\n' + food_datas[stores[which_one]][1]
-    label = '下一個'
-    actionurl = url.replace('https://www.foodpanda.com.tw/','')
+
+    try:
+        if type(user_message) == str:
+            url = 'https://www.foodpanda.com.tw/' + user_message
+        else:
+            lat = user_message.latitude
+            lng = user_message.longitude
+            address = user_message.address
+            for c in cities:
+                if re.search(c, address) != None:
+                    city = c
+            url = 'https://www.foodpanda.com.tw/restaurants/lat/' + str(lat) + '/lng/' + str(
+                lng) + '/city/' + city + '/address/' + address
+        print(url)
+        res = requests.get(url)
+        soup = BeautifulSoup(res.content, 'lxml')
+        stores = []
+        summarys = []
+        costs = []
+        pictures = []
+        food_datas = {}
+        for store in soup.find_all('span', 'name fn'):
+            stores.append(store.text.replace(' ', ''))
+        for summary in soup.find_all('li', 'vendor-characteristic'):
+            summarys.append(summary.text[1:-1].replace('\n', ','))
+        for cost in soup.find_all('ul', 'extra-info mov-df-extra-info'):
+            costs.append(cost.text.replace('\n', '').replace(' ', ''))
+        for picture in soup.find_all('div', 'vendor-picture b-lazy'):
+            pictures.append(picture['data-src'].split('|')[0])
+        for index, key in enumerate(stores):
+            food_datas[key] = [summarys[index], costs[index], pictures[index]]
+        which_one = random.randint(0, len(stores))
+        imageurl = food_datas[stores[which_one]][2]
+        title = stores[which_one]
+        text = food_datas[stores[which_one]][0] + '\n' + food_datas[stores[which_one]][1]
+        label = '下一個'
+        actionurl = url.replace('https://www.foodpanda.com.tw/', '')
+    except:
+        if type(user_message) == str:
+            url = 'https://www.google.com.tw/maps/search/餐廳/@' + user_message
+        else:
+            lat = user_message.latitude
+            lng = user_message.longitude
+            url = 'https://www.google.com.tw/maps/search/餐廳/@' + str(lat) + ',' + str(lng) + ',17z/'
+        print(url)
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+        driver = webdriver.Chrome(chrome_options=options)
+        driver.get(url)
+        html = driver.page_source
+        soup = BeautifulSoup(html, 'lxml')
+        stores = []
+        summarys = []
+        for store in soup.find_all('h3', 'section-result-title'):
+            stores.append(store.text.split('/')[0].replace(' ', ''))
+        for div in soup.find_all('div', 'section-result-details-container'):
+            summary = div.text.replace('廣告', '').replace('/', '').replace('·', '').replace(' ', '').replace('*',
+                                                                                                            '').replace(
+                '\n', '')
+            if summary != '' and summary != ' ' and summary != '\xa0':
+                summarys.append(summary)
+        which_one = random.randint(0, len(stores))
+        imageurl = 'https://s9.rr.itc.cn/r/wapChange/20173_30_18/a4a6dn0435291242296.jpeg'
+        title = stores[which_one]
+        text = summary[which_one]
+        label = '下一個'
+        actionurl = url.replace('https://www.google.com.tw/maps/search/餐廳/@', '')
     reply = imageurl + ' ' + title + ' ' + text + ' ' + label + ' ' + actionurl
     reply = package_button_template(unpackage_text=reply)
     return reply
