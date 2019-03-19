@@ -46,12 +46,13 @@ def talk_normal(user_message):
             # 這個 ChatBot 的名字叫做 Sara
             "Sara",
             storage_adapter="chatterbot.storage.SQLStorageAdapter",
+            
         )
 
         def __init__(self):
             self.trainer = ChatterBotCorpusTrainer(self.chatbot)
-            self.trainer.train("chatterbot.corpus.chinese.greetings")
-            self.trainer.train("chatterbot.corpus.chinese.conversations")
+            self.trainer.train("./chatterbot_corpus /data/chinese/SaraChinese.yml")
+
 
         def getResponse(self, message=""):
             return self.chatbot.get_response(message)
