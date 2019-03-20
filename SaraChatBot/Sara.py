@@ -190,7 +190,7 @@ def recommend_food(user_message):
             pictures.append(picture['data-src'].split('|')[0])
         for index, key in enumerate(stores):
             food_datas[key] = [summarys[index], costs[index], pictures[index]]
-        which_one = random.randint(0, len(stores))
+        which_one = random.randint(0, len(stores)-1)
         imageurl = food_datas[stores[which_one]][2]
         title = stores[which_one]
         text = food_datas[stores[which_one]][0] + '\n' + food_datas[stores[which_one]][1]
@@ -217,7 +217,8 @@ def recommend_food(user_message):
             summarys.append(summary.text.replace('\xa0', '').replace('\n', '').replace(' ', ''))
         for picture in soup.find_all('img', 'lazy'):
             pictures.append(picture['src'])
-        which_one = random.randint(0, len(stores))
+        which_one = random.randint(0, len(stores)-1)
+        print(which_one)
         imageurl = pictures[which_one]
         title = stores[which_one]
         text = summarys[which_one]
