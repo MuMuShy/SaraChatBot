@@ -160,12 +160,7 @@ def recommend_food(user_message):
     import os
     cities = ['台北市', '新北市', '桃園市', '台中市', '台南市', '高雄市', '基隆市', '新竹市', '嘉義市', '新竹縣',
               '苗栗縣', '彰化縣', '南投縣', '雲林縣', '嘉義縣', '屏東縣', '宜蘭縣', '花蓮縣', '台東縣', '澎湖縣']
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.binary_location = os.getenv('GOOGLE_CHROME_BIN', None)
-    chrome_options.add_argument('--disable-gpu')
-    chrome_options.add_argument('--no-sandbox')
-    driver = webdriver.Chrome(chrome_options=chrome_options, executable_path=os.getenv('CHROMEDRIVER_PATH', None))
-    driver.get("https://mumu.tw")
+
     try:
         if type(user_message) == str:
             url = 'https://www.foodpanda.com.tw/' + user_message
@@ -247,6 +242,24 @@ def set_MySqlfood(user_message,user_id):
     reply=package_text(reply)
     return reply
 
+#推薦歌曲
+def recommend_music():
+    import json
+    import random
+    with open('./music.json', 'r') as load_f:
+        song_datas = json.load(load_f)
+    songs = []
+    for key in song_datas.keys():
+        songs.append(key)
+    choose_one = songs[random.randint(0, len(song_datas)-1)]
+    imageurl = song_datas[choose_one][1]
+    title = song_datas[choose_one][0]
+    text = song_datas[choose_one][3]
+    label = 'MUSIC'
+    actionurl = song_datas[choose_one][2]
+    reply = imageurl + ' ' + title + ' ' + text + ' ' + label + ' ' + actionurl
+    reply = package_button_template(unpackage_text=reply)
+    return reply
 
 #查詢傳說對決基本資料
 def search_ArenaofValor(user_message):
