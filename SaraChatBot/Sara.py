@@ -276,4 +276,58 @@ def search_ArenaofValor(user_message):
     return reply
 
 
+def search_ilearnBroadcast(user_message):
+    from bs4 import BeautifulSoup
+    import re
+    from selenium import webdriver
+    import time
+    import os
+    print('開始爬文')
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.getenv('GOOGLE_CHROME_BIN', None)
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--no-sandbox')
+    driver = webdriver.Chrome(chrome_options=chrome_options,executable_path=os.getenv('CHROMEDRIVER_PATH',None))
+    driver.get("https://ilearn2.fcu.edu.tw/")
+    driver.find_element_by_id("login_username").click()
+    driver.find_element_by_id("login_username").clear()
+    driver.find_element_by_id("login_username").send_keys("d0441258")
+    print('輸入帳號')
+    driver.find_element_by_id("login_password").click()
+    driver.find_element_by_id("login_password").clear()
+    driver.find_element_by_id("login_password").send_keys("MuMuShy850421")
+    print('輸入密碼')
+    print('按下送出')
+    print('等待')
+    time.sleep(10)
+    driver.find_element_by_xpath(
+        u"(.//*[normalize-space(text()) and normalize-space(.)='記住帳號'])[1]/following::input[1]").click()
+    print('登入成功')
+    html = driver.page_source
+    soup = BeautifulSoup(html, 'lxml')
+    # print(soup)
+    my_class = []
+    driver.close()
+    for a in soup.find_all('a', {'href': re.compile('^https://ilearn2.fcu.edu.tw/course/')}):
+        print(a)
+        id = a['href'][re.search('id=', a['href']).span()[1]:]
+        my_class.append(a['href'] + ' ' + a['title'] + ' ' + id)
+    print("總共有：", len(my_class))
+    my_class_count = int((len(my_class) - 3) / 2)
+    print("我的課程有:", my_class_count)
+    my_class_index = my_class_count + 3
+    my_class = my_class[my_class_index:]
+    print('回應測試')
+    reply='測試:'+str(my_class[0])
+    reply = package_text(unpackage_text=reply)
+    return reply
+    urlbase = "https://ilearn2.fcu.edu.tw/mod/forum/view.php?id="
+    reply = ''
+    for my_subject in my_class:
+        classid = my_subject.split()[-1]
+        classbroadcase_url = urlbase + classid
+        print('我的課程:', my_subject + " 公告網址: " + classbroadcase_url)
+        reply += '我的課程:', my_subject + " 公告網址: " + classbroadcase_url
 
+    reply = package_text(unpackage_text=reply)
+    return reply
