@@ -241,6 +241,22 @@ def set_MySqlfood(user_message,user_id):
     reply=package_text(reply)
     return reply
 
+#推薦歌曲
+def recommend_music():
+    import json
+    import random
+    with open('./music.json', 'r') as load_f:
+        song_datas = json.load(load_f)
+    songs = song_datas.keys()
+    choose_one = songs[random.randint(0, len(song_datas)-1)]
+    imageurl = song_datas[choose_one][1]
+    title = song_datas[choose_one][0]
+    text = song_datas[choose_one][3]
+    label = 'MUSIC'
+    actionurl = song_datas[choose_one][2]
+    reply = imageurl + ' ' + title + ' ' + text + ' ' + label + ' ' + actionurl
+    reply = package_button_template(unpackage_text=reply)
+    return reply
 
 #查詢傳說對決基本資料
 def search_ArenaofValor(user_message):
