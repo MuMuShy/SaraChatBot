@@ -198,34 +198,31 @@ def recommend_food(user_message):
         actionurl = url.replace('https://www.foodpanda.com.tw/', '')
     except:
         if type(user_message) == str:
-            url = 'https://www.google.com.tw/maps/search/餐廳/@' + user_message
+            url = 'https://www.ipeen.com.tw/search/all/000/1-0-0-0/?adkw=' + user_message + '&so=sat'
         else:
-            lat = user_message.latitude
-            lng = user_message.longitude
-            url = 'https://www.google.com.tw/maps/search/餐廳/@' + str(lat) + ',' + str(lng) + ',17z/'
+            for c in cities:
+                if re.search(c, address) != None:
+                    x = c
+            city = address[re.search(x[0], address).span()[0]:re.search('區', address).span()[1]]
+            url = 'https://www.ipeen.com.tw/search/all/000/1-0-0-0/?adkw=' + city + '&so=sat'
         print(url)
-        options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
-        driver = webdriver.Chrome(chrome_options=options)
-        driver.get(url)
-        html = driver.page_source
-        soup = BeautifulSoup(html, 'lxml')
+        res = requests.get(url)
+        soup = BeautifulSoup(res.content, 'lxml')
         stores = []
         summarys = []
-        for store in soup.find_all('h3', 'section-result-title'):
-            stores.append(store.text.split('/')[0].replace(' ', ''))
-        for div in soup.find_all('div', 'section-result-details-container'):
-            summary = div.text.replace('廣告', '').replace('/', '').replace('·', '').replace(' ', '').replace('*',
-                                                                                                            '').replace(
-                '\n', '')
-            if summary != '' and summary != ' ' and summary != '\xa0':
-                summarys.append(summary)
+        pictures = []
+        for store in soup.find_all('a', {'data-label': '店名'}):
+            stores.append(store.text.replace(' ', ''))
+        for summary in soup.find_all('li', 'cate'):
+            summarys.append(summary.text.replace('\xa0', '').replace('\n', '').replace(' ', ''))
+        for picture in soup.find_all('img', 'lazy'):
+            pictures.append(picture['src'])
         which_one = random.randint(0, len(stores))
-        imageurl = 'https://s9.rr.itc.cn/r/wapChange/20173_30_18/a4a6dn0435291242296.jpeg'
+        imageurl = pictures[which_one]
         title = stores[which_one]
-        text = summary[which_one]
+        text = summarys[which_one]
         label = '下一個'
-        actionurl = url.replace('https://www.google.com.tw/maps/search/餐廳/@', '')
+        actionurl = url.replace('https://www.ipeen.com.tw/search/all/000/1-0-0-0/?adkw=', '').replace('&so=sat', '')
     reply = imageurl + ' ' + title + ' ' + text + ' ' + label + ' ' + actionurl
     reply = package_button_template(unpackage_text=reply)
     return reply
