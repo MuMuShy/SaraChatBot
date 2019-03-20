@@ -247,7 +247,9 @@ def recommend_music():
     import random
     with open('./music.json', 'r') as load_f:
         song_datas = json.load(load_f)
-    songs = song_datas.keys()
+    songs = []
+    for key in song_datas.keys():
+        songs.append(key)
     choose_one = songs[random.randint(0, len(song_datas)-1)]
     imageurl = song_datas[choose_one][1]
     title = song_datas[choose_one][0]
