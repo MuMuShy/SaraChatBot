@@ -157,9 +157,15 @@ def recommend_food(user_message):
     import requests
     import random
     from selenium import webdriver
+    import os
     cities = ['台北市', '新北市', '桃園市', '台中市', '台南市', '高雄市', '基隆市', '新竹市', '嘉義市', '新竹縣',
               '苗栗縣', '彰化縣', '南投縣', '雲林縣', '嘉義縣', '屏東縣', '宜蘭縣', '花蓮縣', '台東縣', '澎湖縣']
-
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.getenv('GOOGLE_CHROME_BIN', None)
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--no-sandbox')
+    driver = webdriver.Chrome(chrome_options=chrome_options, executable_path=os.getenv('CHROMEDRIVER_PATH', None))
+    driver.get("https://mumu.tw")
     try:
         if type(user_message) == str:
             url = 'https://www.foodpanda.com.tw/' + user_message

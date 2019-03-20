@@ -6,4 +6,4 @@ pytz
 googletrans
 lxml
 PyMySQL
-selenium
+selenium==3.8.0
