@@ -295,54 +295,56 @@ def search_ilearnBroadcast(user_message):
     from bs4 import BeautifulSoup
     import re
     from selenium import webdriver
-    import time
-    import os
-    print('開始爬文')
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.binary_location = os.getenv('GOOGLE_CHROME_BIN', None)
-    chrome_options.add_argument('--disable-gpu')
-    chrome_options.add_argument('--no-sandbox')
-    driver=webdriver.Chrome()
-    #driver = webdriver.Chrome(chrome_options=chrome_options,executable_path=os.getenv('CHROMEDRIVER_PATH',None))
+    from selenium.webdriver.chrome.options import Options
+
+    driver = webdriver.Chrome()
     driver.get("https://ilearn2.fcu.edu.tw/login/index.php")
     driver.find_element_by_id("username").click()
     driver.find_element_by_id("username").clear()
-    driver.find_element_by_id("username").send_keys("d0441258")
-    print('輸入帳號')
+    driver.find_element_by_id("username").send_keys("d0440553")
     driver.find_element_by_id("password").click()
     driver.find_element_by_id("password").clear()
-    driver.find_element_by_id("password").send_keys("MuMuShy850421")
-    print('輸入密碼')
-    print('按下送出')
-    print('等待')
-    time.sleep(2)
+    driver.find_element_by_id("password").send_keys("Qazwaxxm3jo3g")
     driver.find_element_by_id("loginbtn").click()
-    print('登入成功')
     html = driver.page_source
-    soup = BeautifulSoup(html, 'lxml')
-    # print(soup)
-    my_class = []
     driver.close()
-    for a in soup.find_all('a', {'href': re.compile('^https://ilearn2.fcu.edu.tw/course/')}):
-        print(a)
-        id = a['href'][re.search('id=', a['href']).span()[1]:]
-        my_class.append(a['href'] + ' ' + a['title'] + ' ' + id)
-    print("總共有：", len(my_class))
-    my_class_count = int((len(my_class) - 3) / 2)
-    print("我的課程有:", my_class_count)
-    my_class_index = my_class_count + 3
-    my_class = my_class[my_class_index:]
-    print('回應測試')
-    reply='測試:'+str(my_class[0])
-    reply = package_text(unpackage_text=reply)
-    return reply
-    urlbase = "https://ilearn2.fcu.edu.tw/mod/forum/view.php?id="
-    reply = ''
-    for my_subject in my_class:
-        classid = my_subject.split()[-1]
-        classbroadcase_url = urlbase + classid
-        print('我的課程:', my_subject + " 公告網址: " + classbroadcase_url)
-        reply += '我的課程:', my_subject + " 公告網址: " + classbroadcase_url
+    soup = BeautifulSoup(html, 'lxml')
+    courses = []
+    course_urls = []
+    course_summarys = {}
+    for course in soup.find_all('a', {'href': re.compile('https://ilearn2.fcu.edu.tw/course/')}):
+        try:
+            if course.i['class'] == ['fa', 'fa-graduation-cap']:
+                courses.append(course.text)
+                course_urls.append(course['href'])
+        except:
+            pass
+    for index, url in enumerate(course_urls):
+        summarys = []
+        driver = webdriver.Chrome()
+        driver.get(url)
+        driver.find_element_by_id("username").click()
+        driver.find_element_by_id("username").clear()
+        driver.find_element_by_id("username").send_keys("d0440553")
+        driver.find_element_by_id("password").click()
+        driver.find_element_by_id("password").clear()
+        driver.find_element_by_id("password").send_keys("Qazwaxxm3jo3g")
+        driver.find_element_by_id("loginbtn").click()
+        driver.find_element_by_xpath(
+            u"(.//*[normalize-space(text()) and normalize-space(.)='一般'])[1]/following::span[1]").click()
 
-    reply = package_text(unpackage_text=reply)
-    return reply
+        html = driver.page_source
+        driver.close()
+        soup = BeautifulSoup(html, 'lxml')
+
+        for td in soup.find_all('td', 'topic starter'):
+            summarys.append(td.text)
+        course_summarys[courses[index]] = summarys
+    text = ''
+    for index, course in enumerate(courses):
+        text = text + course + '\n' + course_urls[index] + '\n'
+        if course_summarys[course] == []:
+            course_summarys[course] = ['沒有公告']
+        for summary in course_summarys[course]:
+            text += summary + ' '
+        text += '\n'
