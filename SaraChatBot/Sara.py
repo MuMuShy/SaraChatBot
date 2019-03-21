@@ -35,6 +35,7 @@ def get_MySql_command(user_MySql,user_message):
             return eval(action_command)
 
 
+
 #普通回話
 def talk_normal(user_message):
     from chatterbot import ChatBot
@@ -51,6 +52,7 @@ def talk_normal(user_message):
 
         def __init__(self):
             self.trainer = ChatterBotCorpusTrainer(self.chatbot)
+            self.chatbot.set_trainer(ChatterBotCorpusTrainer)
             self.trainer.train("./chatterbot_corpus /data/chinese/SaraChinese.yml")
 
 
