@@ -63,6 +63,7 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 @handler.add(MessageEvent, message=LocationMessage)
 @handler.add(MessageEvent, message=StickerMessage)
+@handler.add(MessageEvent, message=ImageMessage)
 def handle_message(event):
     user_id = event.source.user_id
     add_userid(user_id)
@@ -85,6 +86,16 @@ def handle_message(event):
     elif user_message_type == 'sticker':
         print('收到貼圖訊息')
         line_bot_api.reply_message(event.reply_token, StickerSendMessage(package_id='1',sticker_id=410))
+    elif user_message_type == 'image':
+        print('收到圖片訊息')
+        image_id=event.message.id
+        imagecontent=line_bot_api.get_message_content(image_id)
+        with open("./tempjpg", 'wb') as fd:
+            for chunk in imagecontent.iter_content():
+                fd.write(chunk)
+        sara_reply=Sara.image_recognition("./tempjpg")
+        reply_type = sara_reply.split(';')[0]
+        reply_message = sara_reply.split(';')[1]
 
     # 回覆給使用者的格式
     if reply_type == 'text':

@@ -4,20 +4,25 @@
 import command_dictionary
 
 
+#包裝純文字格式
 def package_text(unpackage_text):
     unpackage_text = 'text;'+unpackage_text
     return str(unpackage_text)
 
 
+#包裝圖片格式
 def package_img(unpackage_text):
     unpackage_text='img;'+unpackage_text
     return str(unpackage_text)
 
 
+#包裝按鈕回應格式
 def package_button_template(unpackage_text):
     unpackage_text='buttontemplate;'+unpackage_text
     return str(unpackage_text)
 
+
+#獲得回應 （程式回傳點）
 def get_reply(user_message,user_id=0):
     user_message = str(user_message)
     for command in command_dictionary.word.keys():
@@ -27,6 +32,7 @@ def get_reply(user_message,user_id=0):
     return talk_normal(user_message)
 
 
+#獲得資料庫的指令
 def get_MySql_command(user_MySql,user_message):
     for x in range(len(user_MySql)):
         if user_MySql[x] == '1':
@@ -34,6 +40,32 @@ def get_MySql_command(user_MySql,user_message):
             action_command=command_dictionary.word_MySQl[command_index]
             return eval(action_command)
 
+# 教Sara 使用者說什麼@Sara應該回應什麼
+def teach_Sara(user_message):
+    import yaml
+    commands=['教你 ','教妳 ']
+    for command in commands:
+        conversation_say=user_message.replace(command,'').split('@')[0]
+        conversation_reply=user_message.replace(command,'').split('@')[-1]
+    with open("./chatterbot_corpus /data/chinese/SaraChinese.yml", "r") as yaml_file:
+        yaml_obj = yaml.load(yaml_file.read())
+        old_conversation = yaml_obj["conversations"]
+        dic = [conversation_say, conversation_reply]
+        for items in old_conversation:
+            if items == dic:
+                print('指令已存在')
+                yaml_file.close()
+                reply = 'Sara好像學過這句話囉 ～～'
+                reply = package_text(unpackage_text=reply)
+                return reply
+        print('指令不存在 新增指令')
+        old_conversation.append(dic)
+        with open('./chatterbot_corpus /data/chinese/SaraChinese.yml', 'w') as yaml_file:
+            yaml_obj["conversations"] = old_conversation
+            yaml.dump(yaml_obj, yaml_file, default_flow_style=False, encoding=('utf-8'))
+            reply = 'Sara學會新的對話了 ！ 謝謝你～～'
+            reply = package_text(unpackage_text=reply)
+            return reply
 
 
 #普通回話
@@ -52,8 +84,8 @@ def talk_normal(user_message):
 
         def __init__(self):
             self.trainer = ChatterBotCorpusTrainer(self.chatbot)
-            self.chatbot.set_trainer(ChatterBotCorpusTrainer)
             self.trainer.train("./chatterbot_corpus /data/chinese/SaraChinese.yml")
+            print('訓練完畢')
 
 
         def getResponse(self, message=""):
@@ -291,6 +323,7 @@ def search_ArenaofValor(user_message):
     return reply
 
 
+#難產中
 def search_ilearnBroadcast(user_message):
     from bs4 import BeautifulSoup
     import re
@@ -348,3 +381,100 @@ def search_ilearnBroadcast(user_message):
         for summary in course_summarys[course]:
             text += summary + ' '
         text += '\n'
+
+
+def image_recognition(imagefilepath):
+    reply=""
+    import base64
+    import json
+    outputfile = 'data.json'
+    requestlist = []
+    feature_json_obj = []
+    features = "FACE_DETECTION WEB_DETECTION"
+    with open(imagefilepath, 'rb')as image_file:
+        content_json_obj = {
+            "content": base64.b64encode(image_file.read()).decode('UTF-8')
+        }
+    for word in features.split(' '):
+        feature_json_obj.append({
+            "type": word,
+            "maxResults": "10"
+        })
+
+    requestlist.append({
+        "features": feature_json_obj,
+        "image": content_json_obj,
+    })
+
+    with open(outputfile, 'w') as output_file:
+        json.dump({"requests": requestlist}, output_file)
+
+    print('Send requests...')
+
+    import requests
+    data = open('./data.json', 'rb').read()
+    response = requests.post(
+        url='https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBSscdPQsM_AFZapsFOHK66U-TgHjdX_8M',
+        data=data,
+        headers={'Content-Type': 'application/json'})
+    response = response.text
+    response_json = json.loads(response)
+    face_response = response_json['responses'][0]
+    peoplecount = 1
+    emotions = ["喜悅 joyLikelihood", "難過 sorrowLikelihood", "生氣 angerLikelihood", "驚訝 surpriseLikelihood",
+                "備感壓力 underExposedLikelihood", "憂鬱 blurredLikelihood", "戴帽子 headwearLikelihood"]
+    compare_result = ["非常低的可能 VERY_UNLIKELY", "低可能 UNLIKELY", "可能 LIKELY", "非常可能 VERY_LIKELY","吻合 POSSIBLE"]
+    if 'faceAnnotations' in response_json['responses'][0]:
+        for face_result in face_response['faceAnnotations']:
+            print('第', peoplecount, "個人看起來: \n")
+            counttemp=str(peoplecount)
+            reply += '第'+counttemp+"個人看起來: \n"
+            for emotion in emotions:
+                emotion_chinese = emotion.split(' ')[0]
+                emotion_compare = emotion.split(' ')[1]
+                for result in compare_result:
+                    result_chinese = result.split(' ')[0]
+                    result_compare = result.split(' ')[1]
+                    if face_result[emotion_compare] == result_compare:
+                        face_result[emotion_compare] = result_chinese
+                print(emotion_chinese, ": ", face_result[emotion_compare])
+                reply += str(emotion_chinese)+": "+str(face_result[emotion_compare])+"\n"
+            peoplecount += 1
+            print('\n')
+            reply += '\n'
+    else:
+        reply+='你似乎給了我一張沒有人的照片呢 不過我還是幫你找一下網路上有沒有這張圖片\n'
+    print('網頁分析')
+    if 'fullMatchingImages' in response_json['responses'][0]['webDetection']:
+        print(response_json['responses'][0]['webDetection']['fullMatchingImages'])
+        print('\n')
+        web_response_fullmatch = response_json['responses'][0]['webDetection']['fullMatchingImages']
+        web_response_pagesmatch = response_json['responses'][0]['webDetection']['pagesWithMatchingImages']
+        for url in web_response_fullmatch:
+            print("找到與圖片吻合的網址: ", url['url'])
+            urltemp=str(url['url'])
+            reply += "找到與圖片吻合的網址: "+urltemp+'\n'
+        for url_item in web_response_pagesmatch:
+            print('找到有出現圖片的網站: '+url_item['url'])
+            urltemp = str(url_item['url'])
+            reply += '找到有出現圖片的網站:'+urltemp+'\n'
+    else:
+        print('沒有圖片出現吻合的網站資料')
+        reply+='沒有圖片出現吻合的網站資料'+'\n'
+    if 'visuallySimilarImages' in response_json['responses'][0]['webDetection']:
+        web_response_simullar = response_json['responses'][0]['webDetection']['visuallySimilarImages']
+        simullar_max = 3  # 最多列出五個相似
+        for items in web_response_simullar:
+            if simullar_max <= 0:
+                break
+            else:
+                print("找到與圖片相似的網站: ", items['url'])
+                urltemp=str(items['url'])
+                reply += "找到與圖片相似的網站: "+urltemp+'\n'
+                simullar_max -= 1
+    else:
+        print('沒有相似圖片的網站資料')
+        reply += '沒有相似圖片的網站資料'+'\n'
+
+    reply=package_text(reply)
+    return reply
